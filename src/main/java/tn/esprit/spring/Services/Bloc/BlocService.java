@@ -22,10 +22,15 @@ public class BlocService implements IBlocService {
 
     @Override
     public Bloc addOrUpdate2(Bloc b) { //Cascade
-        List<Chambre> chambres = b.getChambres();
-        for (Chambre c : chambres) {
-            c.setBloc(b);
-            chambreRepository.save(c);
+        // Save the bloc first to get the generated ID
+        b = repo.save(b);
+
+        // Only process chambres if not null
+        if (b.getChambres() != null) {
+            for (Chambre chambre : b.getChambres()) {
+                chambre.setBloc(b);
+                chambreRepository.save(chambre);
+            }
         }
         return b;
     }
@@ -110,7 +115,5 @@ public class BlocService implements IBlocService {
         b.setFoyer(f);
         return blocRepository.save(b);
     }
-
-
 
 }
