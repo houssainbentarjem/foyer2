@@ -6,7 +6,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.1.5</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>tn.esprit.spring</groupId>
     <artifactId>Foyer</artifactId>
@@ -15,6 +15,9 @@
     <description>Foyer</description>
     <properties>
         <java.version>17</java.version>
+        <sonar.projectKey>FoyerApp</sonar.projectKey>
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <!-- Remove sonar.login from here for security -->
     </properties>
     <dependencies>
         <dependency>
@@ -36,25 +39,42 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.0.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
-            <version>2.2.0.RELEASE</version>
+            <!-- version inherited from parent -->
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.12.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <!-- Exclure JUnit 4 et vieux mockito -->
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
@@ -72,20 +92,20 @@
                     </excludes>
                 </configuration>
             </plugin>
-            <!-- Jacoco plugin for code coverage -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.11</version>
                 <executions>
                     <execution>
+                        <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>test</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
@@ -94,5 +114,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
